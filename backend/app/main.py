@@ -1,7 +1,13 @@
 from fastapi import FastAPI
 
+from app.database import engine, Base
+from app.models.note import Note  # Importer les modèles pour créer les tables
+
 # Créer l'instance de l'application
 app = FastAPI()
+
+# Créer les tables dans la base de données
+Base.metadata.create_all(bind=engine)
 
 # Défini une route GET sur "/"
 @app.get("/")
