@@ -83,7 +83,12 @@ Crée `backend/app/main.py` avec ton premier endpoint.
 
 ```python
 from fastapi import FastAPI
+
 app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello World"}
 ```
 
 ### 5. Lancer le serveur

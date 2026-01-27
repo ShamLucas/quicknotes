@@ -42,4 +42,4 @@ npm run dev
 
 ## Auteur
 
-Lucas — Sprint de préparation reprise d'études informatique
+Lucas — Sprint de remise à niveau python & react
