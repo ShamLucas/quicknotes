@@ -98,7 +98,7 @@ function App() {
         <ul>
           {notes.map(note => (
             <li key={note.id}>
-              <strong>{note.id}</strong>
+              <strong>{note.title}</strong>
               {note.content && <p>{note.content}</p>}
               <button onClick={() => handleDelete(note.id)}>Supprimer</button>
             </li>
