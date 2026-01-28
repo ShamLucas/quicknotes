@@ -255,6 +255,20 @@ git add backend/app/dependencies.py backend/app/routers/ backend/app/main.py
 git commit -m "feat(backend): add CRUD routes for notes"
 ```
 
+### 7. Merger la branche et préparer la suite
+
+Le backend est fonctionnel. Merge ta branche dans main avant de passer au frontend.
+
+```bash
+# Pousser les derniers changements
+git push
+
+# Retourner sur main et merger
+git checkout main
+git merge featur/setup-backend
+git push
+```
+
 ## Code de référence
 
 ### Différence entre `model_dump()` et `dict()`

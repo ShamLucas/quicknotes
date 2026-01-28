@@ -56,7 +56,14 @@ frontend/
 
 ## Étapes
 
-### 1. Configurer CORS côté FastAPI
+### 1. Créer une branche pour le frontend
+
+```bash
+# Depuis main (après avoir mergé la branche backend)
+git checkout -b feature/frontend
+```
+
+### 2. Configurer CORS côté FastAPI
 
 Avant de créer le frontend, configure le backend pour accepter les requêtes cross-origin.
 
@@ -93,7 +100,7 @@ def read_root():
 
 **Note :** En production, tu restreindras `allow_origins` à ton domaine réel.
 
-### 2. Créer l'application React avec Vite
+### 3. Créer l'application React avec Vite
 
 ```bash
 # Depuis la racine du projet quicknotes/
@@ -111,7 +118,7 @@ Décortiquons la commande :
 - `frontend` : nom du dossier à créer
 - `--template react` : template React (JSX, pas TypeScript pour l'instant)
 
-### 3. Nettoyer le boilerplate
+### 4. Nettoyer le boilerplate
 
 Vite génère du code de démo. Nettoie pour partir sur une base propre.
 
@@ -152,7 +159,7 @@ body {
 }
 ```
 
-### 4. Lancer le serveur de développement
+### 5. Lancer le serveur de développement
 
 ```bash
 # Depuis frontend/
@@ -161,7 +168,7 @@ npm run dev
 
 Ouvre `http://localhost:5173` → tu dois voir "QuickNotes".
 
-### 5. Créer le service API
+### 6. Créer le service API
 
 Crée la structure pour les appels API.
 
@@ -206,7 +213,7 @@ export async function deleteNote(id) {
 }
 ```
 
-### 6. Afficher les notes dans App.jsx
+### 7. Afficher les notes dans App.jsx
 
 Modifie `src/App.jsx` pour récupérer et afficher les notes :
 
@@ -262,7 +269,7 @@ function App() {
 export default App
 ```
 
-### 7. Tester la connexion
+### 8. Tester la connexion
 
 1. **Lance le backend** (dans un terminal) :
    ```bash
@@ -283,7 +290,7 @@ export default App
 4. **Rafraîchis le frontend** : `http://localhost:5173`
    - Tu dois voir ta note !
 
-### 8. Commit
+### 9. Commit
 
 ```bash
 # Depuis la racine du projet
