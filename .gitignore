@@ -360,3 +360,6 @@ sketch
 
 # Database files
 *.db
+
+# Vite cache
+.vite
