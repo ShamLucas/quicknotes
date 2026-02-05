@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { fetchNotes, createNote, deleteNote, updateNote, fetchTags } from "./services/api"
+import { fetchNotes, createNote, deleteNote, updateNote, fetchTags, createTag } from "./services/api"
 import './App.css'
 
 function App() {
@@ -78,7 +78,8 @@ function App() {
         // Mode création
         await createNote({ 
           title: title.trim(), 
-          content: content.trim() || null 
+          content: content.trim() || null,
+          tags_ids: selectedTags 
         })
       }
 
@@ -86,6 +87,7 @@ function App() {
       setEditingNote(null)
       setTitle("")
       setContent("")
+      setSelectedTags([])
       await loadNotes()
 
     } catch (err) {
@@ -112,13 +114,14 @@ function App() {
     setEditingNote(note)
     setTitle(note.title)
     setContent(note.content || "")
+    setSelectedTags(note.tags ? note.tags.map(tag => tag.id) : [])
   }
 
   async function handleCancel() {
     setEditingNote(null)
     setTitle("")
     setContent("")
-  }
+    setSelectedTags([])
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error: {error}</p>
@@ -170,7 +173,7 @@ function App() {
             </button>
 
             {editingNote && (
-              <button type="button" onClick={handleCancel} disabled={submitting}>
+              <button className="btn-cancel" type="button" onClick={handleCancel} disabled={submitting}>
                 Cancel
               </button>
             )}
