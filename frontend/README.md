@@ -1,16 +1,42 @@
-# React + Vite
+# QuickNotes Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+# Installer les dépendances
+npm install
+```
 
-## React Compiler
+## Commandes
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+# Lancer le serveur de dev
+npm run dev
 
-## Expanding the ESLint configuration
+# Build pour production
+npm run build
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Prévisualiser le build
+npm run preview
+
+# Linter
+npm run lint
+```
+
+## Structure
+
+```
+src/
+├── main.jsx        # Point d'entrée
+├── App.jsx         # Composant principal
+├── App.css         # Styles (à créer)
+└── services/
+    └── api.js      # Appels API backend
+```
+
+## Notes
+
+- Le backend doit tourner sur `http://localhost:8000`
+- Dev server : http://localhost:5173

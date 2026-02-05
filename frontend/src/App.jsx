@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { fetchNotes, createNote, deleteNote } from "./services/api"
+import { fetchNotes, createNote, deleteNote, updateNote } from "./services/api"
 
 function App() {
 
@@ -10,6 +10,8 @@ function App() {
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [submitting, setSubmitting] = useState(false)
+
+  const [editingNote, setEditingNote] = useState(null)
 
   useEffect(() => {
     loadNotes()
@@ -38,12 +40,28 @@ function App() {
 
     try {
       setSubmitting(true)
-      await createNote({ title: title.trim(), content: content.trim() || null })
 
+      if (editingNote) {
+        // Mode édition
+        await updateNote(
+          editingNote.id, { 
+            title: title.trim(), 
+            content: content.trim() || null 
+          })
+      } else {
+        // Mode création
+        await createNote({ 
+          title: title.trim(), 
+          content: content.trim() || null 
+        })
+      }
+
+      // Reset form
+      setEditingNote(null)
       setTitle("")
       setContent("")
-
       await loadNotes()
+
     } catch (err) {
       alert("Error: " + err.message)
     } finally {
@@ -62,6 +80,18 @@ function App() {
     } catch (err) {
       alert("Erreur: " + err.message)
     }
+  }
+
+  async function handleEdit(note) {
+    setEditingNote(note)
+    setTitle(note.title)
+    setContent(note.content || "")
+  }
+
+  async function handleCancel() {
+    setEditingNote(null)
+    setTitle("")
+    setContent("")
   }
 
   if (loading) return <p>Loading...</p>
@@ -87,8 +117,14 @@ function App() {
           disabled={submitting}
         />
         <button type="submit" disabled={submitting}>
-          {submitting ? "Saving..." : "Add Note"}
+          {submitting ? "Saving..." : editingNote ? "Update Note" : "Add Note"}
         </button>
+
+        {editingNote && (
+          <button type="button" onClick={handleCancel} disabled={submitting}>
+            Cancel
+          </button>
+        )}
       </form>
 
       {/* Liste des notes */}
@@ -97,10 +133,13 @@ function App() {
       ) : (
         <ul>
           {notes.map(note => (
-            <li key={note.id}>
+            <li key={note.id} onClick={() => handleEdit(note)} style={{ cursor: "pointer" }}>
               <strong>{note.title}</strong>
               {note.content && <p>{note.content}</p>}
-              <button onClick={() => handleDelete(note.id)}>Supprimer</button>
+              <button onClick={(e) => { e.stopPropagation(); 
+                handleDelete(note.id); }}>
+                  Supprimer
+              Ò</button>
             </li>
             ))}
         </ul>
