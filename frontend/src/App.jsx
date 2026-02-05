@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
-import { fetchNotes, createNote, deleteNote, updateNote } from "./services/api"
+import { fetchNotes, createNote, deleteNote, updateNote, fetchTags } from "./services/api"
+import './App.css'
 
 function App() {
 
@@ -12,10 +13,35 @@ function App() {
   const [submitting, setSubmitting] = useState(false)
 
   const [editingNote, setEditingNote] = useState(null)
+  const [tags, setTags] = useState([])
+  const [selectedTags, setSelectedTags] = useState([])
+  const [newTagName, setNewTagName] = useState("")
 
   useEffect(() => {
     loadNotes()
+    loadTags()
   }, [])
+
+  async function loadTags() {
+    try {
+      const data = await fetchTags()
+      setTags(data)
+    } catch (err) {
+      console.error("Failed to load tags:", err)
+    }
+  }
+
+  async function handleCreateTag() {
+    if (!newTagName.trim()) return
+
+    try {
+      const newTag = await createTag({ name: newTagName.trim() })
+      setTags([...tags, newTag])
+      setNewTagName("")
+    } catch (err) {
+      alert("Failed to create tag: " + err.message)
+    }
+  }
 
   async function loadNotes() {
     try {
@@ -98,52 +124,88 @@ function App() {
   if (error) return <p>Error: {error}</p>
 
   return (
-    <div>
-      <h1>QuickNotes</h1>
+    <div className="app">
+      <header className="header">
+        <h1>QuickNotes</h1>
+      </header>
 
-      {/* Formulaire de création de note */}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          disabled={submitting}
-        />
-        <textarea
-          placeholder="Content"
-          value={content}
-          onChange={e => setContent(e.target.value)}
-          disabled={submitting}
-        />
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Saving..." : editingNote ? "Update Note" : "Add Note"}
-        </button>
+      <main className="main">
+        <section className="form-section">
+          {/* Formulaire de création de note */}
+          <form onSubmit={handleSubmit} className="note-form">
+            <input
+              type="text"
+              placeholder="Title"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              disabled={submitting}
+            />
+            <textarea
+              placeholder="Content"
+              value={content}
+              onChange={e => setContent(e.target.value)}
+              disabled={submitting}
+            />
+            <div className="tag-selector">
+              {tags.map(tag => (
+                <label key={tag.id}>
+                  <input
+                    type="checkbox"
+                    checked={selectedTags.includes(tag.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedTags([...selectedTags, tag.id])
+                      } else {
+                        setSelectedTags(selectedTags.filter(id => id !== tag.id))
+                      }
+                    }}
+                    />
+                  {tag.name}
+                </label>
+              ))}
+            </div>
 
-        {editingNote && (
-          <button type="button" onClick={handleCancel} disabled={submitting}>
-            Cancel
-          </button>
-        )}
-      </form>
+            <button type="submit" disabled={submitting}>
+              {submitting ? "Saving..." : editingNote ? "Update Note" : "Add Note"}
+            </button>
 
-      {/* Liste des notes */}
-      {notes.length === 0 ? (
-        <p>Aucune note.</p>
-      ) : (
-        <ul>
-          {notes.map(note => (
-            <li key={note.id} onClick={() => handleEdit(note)} style={{ cursor: "pointer" }}>
-              <strong>{note.title}</strong>
-              {note.content && <p>{note.content}</p>}
-              <button onClick={(e) => { e.stopPropagation(); 
-                handleDelete(note.id); }}>
-                  Supprimer
-              Ò</button>
-            </li>
-            ))}
-        </ul>
-      )}
+            {editingNote && (
+              <button type="button" onClick={handleCancel} disabled={submitting}>
+                Cancel
+              </button>
+            )}
+          </form>
+
+          </section>
+
+          <section className="notes-section">
+            <h2>Notes</h2>
+
+            {/* Liste des notes */}
+            {notes.length === 0 ? (
+              <p>Aucune note.</p>
+              ) : (
+              <ul className="notes-list">
+                {notes.map(note => (
+                  <li key={note.id} onClick={() => handleEdit(note)} style={{ cursor: "pointer" }}>
+                    <strong>{note.title}</strong>
+                    {note.tags && note.tags.length > 0 && (
+                      <span className="tags">
+                        {note.tags.map(tag => (
+                          <span key={tag.id} className="tag">{tag.name}</span>))}
+                      </span>
+                    )}
+                    {note.content && <p>{note.content}</p>}
+                    <button className="btn-delete" onClick={(e) => { e.stopPropagation(); 
+                      handleDelete(note.id); }}>
+                        Supprimer
+                    </button>
+                  </li>
+                  ))}
+              </ul>
+            )}
+          </section>
+        </main>
     </div>
   )
 }

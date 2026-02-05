@@ -44,3 +44,34 @@ export async function updateNote(id, updatedFields) {
   }
   return await response.json();
 }
+
+export async function fetchTags() {
+  const response = await fetch(`${API_URL}/tags`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch tags');
+  }
+  return await response.json();
+}
+
+export async function createTag(tag) {
+  const response = await fetch(`${API_URL}/tags`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(tag),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to create tag');
+  }
+  return await response.json();
+}
+
+export async function deleteTag(id) {
+  const response = await fetch(`${API_URL}/tags/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete tag');
+  }
+}
